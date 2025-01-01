@@ -7,6 +7,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
+    container_name: kafka-server
     image: 'confluentinc/cp-kafka:latest'
     depends_on:
       - zookeeper
@@ -17,3 +18,9 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    command: >
+      sh -c "
+      /etc/confluent/docker/run &
+      sleep 10 &&
+      kafka-topics --create --topic payment --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+      wait"
