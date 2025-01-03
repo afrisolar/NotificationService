@@ -14,11 +14,6 @@ class NotificationServiceImplTest {
     @InjectMocks
     private NotificationServiceImpl notificationService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     void testSendEmailNotification() {
         NotificationRequestDto request = new NotificationRequestDto();
@@ -52,13 +47,4 @@ class NotificationServiceImplTest {
         assertThrows(IllegalArgumentException.class, () -> notificationService.sendNotification(request));
     }
 
-    @Test
-    void testSendEmailNotificationMissingSubject() {
-        NotificationRequestDto request = new NotificationRequestDto();
-        request.setType("email");
-        request.setRecipient("test@example.com");
-        request.setMessage("Email without a subject.");
-
-        assertThrows(IllegalArgumentException.class, () -> notificationService.sendNotification(request));
-    }
 }

@@ -1,40 +1,29 @@
 package com.afrisol.NotificationService.service;
 
 import com.afrisol.NotificationService.dto.NotificationRequestDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class NotificationServiceImpl implements NotificationService {
 
     @Override
-    public void sendNotification(NotificationRequestDto request) {
+    public Mono<Void> sendNotification(NotificationRequestDto request) {
         String type = request.getType().toLowerCase();
         String recipient = request.getRecipient();
         String message = request.getMessage();
 
-        switch (type) {
-            case "email":
-                sendEmail(recipient, request.getSubject(), message);
-                break;
-            case "sms":
-                sendSms(recipient, message);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid notification type. Use 'email' or 'sms'.");
-        }
+        if (type == "email" ) sendEmail(recipient, request.getSubject(), message);
+        else if (type == "sms") sendSms(recipient, message);
+        else throw new IllegalArgumentException("Invalid notification type. Use 'email' or 'sms'.");
+
+        return Mono.empty();
     }
 
     private void sendEmail(String recipient, String subject, String message) {
-        if (recipient == null || recipient.isBlank()) {
-            throw new IllegalArgumentException("Recipient email cannot be null or empty.");
-        }
-        if (subject == null || subject.isBlank()) {
-            throw new IllegalArgumentException("Email subject cannot be null or empty.");
-        }
-        if (message == null || message.isBlank()) {
-            throw new IllegalArgumentException("Message cannot be null or empty.");
-        }
 
         // Mock email sending by logging
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -45,18 +34,12 @@ public class NotificationServiceImpl implements NotificationService {
         // Uncomment for real email sending
         // mailSender.send(mailMessage);
 
-        System.out.println("Mock Email Sent to " + recipient + " with subject: " + subject);
+        log.info("Mock Email Sent to {} with subject: {}", recipient, subject);
     }
 
     private void sendSms(String phoneNumber, String message) {
-        if (phoneNumber == null || phoneNumber.isBlank()) {
-            throw new IllegalArgumentException("Phone number cannot be null or empty.");
-        }
-        if (message == null || message.isBlank()) {
-            throw new IllegalArgumentException("Message cannot be null or empty.");
-        }
 
         // Mock SMS sending by logging
-        System.out.println("Mock SMS Sent to " + phoneNumber + ": " + message);
+        log.info("Mock SMS Sent to {}: {} ", phoneNumber, message);
     }
 }

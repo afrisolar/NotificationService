@@ -1,6 +1,7 @@
 package com.afrisol.NotificationService.service;
 
 import com.afrisol.NotificationService.dto.NotificationRequestDto;
+import reactor.core.publisher.Mono;
 
 public interface NotificationService {
     /**
@@ -9,5 +10,5 @@ public interface NotificationService {
      *
      * @param request the notification request containing details such as type, recipient, subject, and message
      */
-    void sendNotification(NotificationRequestDto request);
+    Mono<Void> sendNotification(NotificationRequestDto request);
 }

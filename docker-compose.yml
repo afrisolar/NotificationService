@@ -23,4 +23,5 @@ services:
       /etc/confluent/docker/run &
       sleep 10 &&
       kafka-topics --create --topic payment --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
+      kafka-topics --create --topic notification --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 &&
       wait"
